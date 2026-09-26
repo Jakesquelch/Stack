@@ -1,0 +1,2 @@
+- Money on the poker app is Great British Pouunds 
+- I want the UI to be simple and clean on the phone
