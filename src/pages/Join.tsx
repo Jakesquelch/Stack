@@ -75,7 +75,7 @@ function InstallHint() {
         <span className="font-medium text-slate-100">iPhone:</span> in Safari tap Share → Add to Home Screen.
       </p>
       <p className="mb-2">
-        <span className="font-medium text-slate-100">Android:</span> tap ⋮ → Install app.
+        <span className="font-medium text-slate-100">Android (cringe):</span> in Chrome tap ⋮ → Install app.
       </p>
       <p className="text-slate-400">Then open it from your home screen and join there. Joining here won't carry over.</p>
     </section>
