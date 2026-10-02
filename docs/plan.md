@@ -348,11 +348,11 @@ Stack/                         # repo root: the app lives next to docs/
 ## 9. Build phases
 
 ### Phase 0 — Setup
-- [ ] Scaffold the app at the repo root: `npm create vite@latest . -- --template react-ts`
+- [x] Scaffold the app at the repo root: `npm create vite@latest . -- --template react-ts`
   - **Careful:** when it says the directory isn't empty, choose **Ignore files and continue**. **Remove existing files** deletes `docs/` and `CLAUDE.md`.
   - Afterwards, check `.gitignore` still ignores `.env` (Vite's template replaces the file).
-- [ ] Add Tailwind, `vite-plugin-pwa`, `@supabase/supabase-js`, TanStack Query, React Router, Vitest
-- [ ] Add `vercel.json` with a rewrite to `index.html`, so refreshing `/history/:id` doesn't 404
+- [x] Add Tailwind, `vite-plugin-pwa`, `@supabase/supabase-js`, TanStack Query, React Router, Vitest
+- [x] Add `vercel.json` with a rewrite to `index.html`, so refreshing `/history/:id` doesn't 404
 - [ ] Create two Supabase projects (the free tier allows two): **dev** for building and testing, **prod** for real games. Turn on anonymous sign-ins in both
 - [ ] Write the schema as Supabase CLI migrations in `supabase/migrations/` and apply them with `supabase db push`. Once real games exist you can't just re-run one big `schema.sql`
 - [ ] Set the passphrase in each project's SQL editor, not in a migration, so it stays out of git: `insert into settings (passphrase_hash) values (extensions.crypt('three random words', extensions.gen_salt('bf')));`
@@ -360,9 +360,9 @@ Stack/                         # repo root: the app lives next to docs/
 - [ ] Add the keep-alive workflow, with the prod URL and key as GitHub secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`)
 
 ### Phase 1 — Core logic
-- [ ] `settle.ts` + unit tests (balanced game, one big loser, everyone even, mismatch throws)
-- [ ] Random-games test: generate lots of balanced games and check every loser pays exactly what they lost, every winner gets exactly what they won, there are at most `players − 1` transfers, and every amount is a positive whole number of pence
-- [ ] `money.ts` helpers (pence ↔ "£12.50") + tests. Parsing typed input is the risky direction: `"0.29" * 100` is `28.999…`, so use `Math.round`. Reject anything with more than two decimal places
+- [x] `settle.ts` + unit tests (balanced game, one big loser, everyone even, mismatch throws)
+- [x] Random-games test: generate lots of balanced games and check every loser pays exactly what they lost, every winner gets exactly what they won, there are at most `players − 1` transfers, and every amount is a positive whole number of pence
+- [x] `money.ts` helpers (pence ↔ "£12.50") + tests. Parsing typed input is the risky direction: `"0.29" * 100` is `28.999…`, so use `Math.round`. Reject anything with more than two decimal places
 
 ### Phase 2 — Game night (the MVP)
 - [ ] Join screen: add-to-home-screen instructions, passphrase, pick/add your name
