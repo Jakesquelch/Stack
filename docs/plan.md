@@ -353,11 +353,11 @@ Stack/                         # repo root: the app lives next to docs/
   - Afterwards, check `.gitignore` still ignores `.env` (Vite's template replaces the file).
 - [x] Add Tailwind, `vite-plugin-pwa`, `@supabase/supabase-js`, TanStack Query, React Router, Vitest
 - [x] Add `vercel.json` with a rewrite to `index.html`, so refreshing `/history/:id` doesn't 404
-- [ ] Create two Supabase projects (the free tier allows two): **dev** for building and testing, **prod** for real games. Turn on anonymous sign-ins in both
-- [ ] Write the schema as Supabase CLI migrations in `supabase/migrations/` and apply them with `supabase db push`. Once real games exist you can't just re-run one big `schema.sql`
-- [ ] Set the passphrase in each project's SQL editor, not in a migration, so it stays out of git: `insert into settings (passphrase_hash) values (extensions.crypt('three random words', extensions.gen_salt('bf')));`
-- [ ] Push to GitHub, connect to Vercel (auto-deploy on push). Prod keys go in Vercel, dev keys in `.env.local`
-- [ ] Add the keep-alive workflow, with the prod URL and key as GitHub secrets (`SUPABASE_URL`, `SUPABASE_ANON_KEY`)
+- [x] Create two Supabase projects (the free tier allows two): **dev** for building and testing, **prod** for real games. Turn on anonymous sign-ins in both
+- [x] Write the schema as Supabase CLI migrations in `supabase/migrations/` and apply them with `supabase db push`. Once real games exist you can't just re-run one big `schema.sql`
+- [x] Set the passphrase in each project's SQL editor, not in a migration, so it stays out of git: `insert into settings (passphrase_hash) values (extensions.crypt('three random words', extensions.gen_salt('bf')));`
+- [x] Push to GitHub, connect to Vercel (auto-deploy on push). Prod keys go in Vercel, dev keys in `.env.local`
+- [x] Add the keep-alive workflow, with the prod URL and key as GitHub secrets (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`)
 
 ### Phase 1 — Core logic
 - [x] `settle.ts` + unit tests (balanced game, one big loser, everyone even, mismatch throws)

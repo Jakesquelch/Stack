@@ -2,19 +2,21 @@
 
 A simple phone app (PWA) for our poker cash game. It tracks buy-ins and rebuys during a game, works out who pays whom at the end, and keeps a history and leaderboard of every game. All money is in GBP, stored as integer pence.
 
+**Live at [jake-stack.vercel.app](https://jake-stack.vercel.app).** Open it on your phone, add it to your home screen (iPhone: from Safari), then open it from the icon and enter the crew passphrase.
+
 The full plan is in [`docs/plan.md`](docs/plan.md), and the progress log is in [`docs/tracker.md`](docs/tracker.md).
 
 ## Status
 
 | Phase | State |
 |---|---|
-| 0: Setup | Done for dev. Prod project, Vercel and GitHub secrets still to do |
+| 0: Setup | Done: dev and prod Supabase, Vercel deploys from `main`, keep-alive running |
 | 1: Core logic | Done: `settle.ts` and `money.ts` with tests |
-| 2: Game night (MVP) | Built and tested end to end against dev. Next: try it at a real game |
+| 2: Game night (MVP) | Done. Next milestone: use it at a real poker night |
 | 3: History & leaderboard | Done |
 | 4: Polish | Not started |
 
-You can join, start a game, record rebuys, add late players, cash people out, fix mistakes from the activity log, and settle up., then look back through past games and the all-time leaderboard.
+You can join, start a game, record rebuys, add late players, cash people out, fix mistakes from the activity log, and settle up, then look back through past games and the all-time leaderboard.
 
 ## Tech
 
