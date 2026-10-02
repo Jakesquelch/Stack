@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "types": "supabase gen types typescript --linked > src/lib/database.types.ts",
+    "icons": "pwa-assets-generator"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
@@ -22,6 +24,7 @@
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "@vite-pwa/assets-generator": "^1.0.4",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
     "supabase": "^2.119.0",

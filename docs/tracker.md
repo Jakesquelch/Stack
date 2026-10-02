@@ -11,3 +11,7 @@
 - Wrote the database schema as a migration (tables, RLS, leaderboard view, join_crew, finish_game, ping). finish_game also checks the transfers leave everyone even. Tested it with 27 checks in PGlite (Postgres in WebAssembly), which caught and fixed two bugs
 - Next: create the dev/prod Supabase projects, push the migration, set the passphrase, fill in .env.local, then start Phase 2
 
+Wow, opus has just gone off and cooked up a storm. I had to go and create the supabase project and link it up and add the .env values but that was basically it. The app is working in my browser. It's been tested and is working well. Now looking into getting it on vercel so that I can get it on my phone.
+
+Potential issues/improvements:
+- What if we don't all want to buy in with the same amount of money at the start?

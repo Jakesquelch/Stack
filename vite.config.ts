@@ -12,6 +12,7 @@ export default defineConfig({
     VitePWA({
       // push game-night fixes to phones instead of leaving them on the old version
       registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'favicon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'Stack',
         short_name: 'Stack',
@@ -20,7 +21,13 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         start_url: '/',
-        icons: [{ src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }],
+        // generated from public/logo.svg by `npm run icons`
+        icons: [
+          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
       },
     }),
   ],

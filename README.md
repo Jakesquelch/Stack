@@ -8,13 +8,13 @@ The full plan is in [`docs/plan.md`](docs/plan.md), and the progress log is in [
 
 | Phase | State |
 |---|---|
-| 0: Setup | App scaffold, config and migration done. Supabase projects, Vercel and GitHub secrets still to do |
+| 0: Setup | Done for dev. Prod project, Vercel and GitHub secrets still to do |
 | 1: Core logic | Done: `settle.ts` and `money.ts` with tests |
-| 2: Game night (MVP) | Not started |
-| 3: History & leaderboard | Not started |
+| 2: Game night (MVP) | Built and tested end to end against dev. Next: try it at a real game |
+| 3: History & leaderboard | Done |
 | 4: Polish | Not started |
 
-The app itself is still a placeholder page. The next step is connecting a dev Supabase project so Phase 2 can be built against it.
+You can join, start a game, record rebuys, add late players, cash people out, fix mistakes from the activity log, and settle up., then look back through past games and the all-time leaderboard.
 
 ## Tech
 
@@ -26,7 +26,7 @@ Needs Node 22 (installed here with nvm).
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in the dev Supabase URL and anon key
+cp .env.example .env.local   # fill in the dev Supabase URL and publishable key
 npm run dev
 ```
 
@@ -36,6 +36,8 @@ npm run dev
 | `npm test` | Run the unit tests (Vitest) |
 | `npm run build` | Type-check and build for production |
 | `npm run lint` | Lint with oxlint |
+| `npm run types` | Regenerate `src/lib/database.types.ts` from the linked Supabase project |
+| `npm run icons` | Regenerate the app icons from `public/logo.svg` |
 
 ## Database setup
 
@@ -53,13 +55,14 @@ The schema lives in `supabase/migrations/`. For each Supabase project (dev and p
    values (extensions.crypt('three random words', extensions.gen_salt('bf')));
    ```
 
-The prod URL and anon key go in Vercel's environment variables and in the GitHub secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY`. The keep-alive workflow uses those secrets to ping the database every 6 hours so the free project doesn't pause.
+The prod URL and publishable key go in Vercel's environment variables and in the GitHub secrets `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`. The keep-alive workflow uses those secrets to ping the database every 6 hours so the free project doesn't pause.
 
 ## Layout
 
 ```
-src/lib/          settle-up algorithm, money helpers, and their tests
-src/              React app (pages and components arrive in Phase 2)
+src/lib/          Supabase client, queries, settle-up, money helpers and tests
+src/pages/        Join, Game, History, GameDetail, Leaderboard
+src/components/   live game pieces: player rows, sheets, activity log, end game
 supabase/         CLI config and migrations
 .github/workflows keep-alive ping
 docs/             plan and tracker

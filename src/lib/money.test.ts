@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatNet, formatPence, parsePounds } from './money'
+import { formatNet, formatPence, parsePounds, penceToInput } from './money'
 
 describe('formatPence', () => {
   it('drops the pence on whole pounds', () => {
@@ -72,5 +72,13 @@ describe('parsePounds', () => {
     for (let p = 0; p <= 10000; p++) {
       expect(parsePounds(formatPence(p))).toBe(p)
     }
+  })
+})
+
+describe('penceToInput', () => {
+  it('gives text parsePounds reads back', () => {
+    expect(penceToInput(4500)).toBe('45')
+    expect(penceToInput(1250)).toBe('12.50')
+    expect(penceToInput(123456)).toBe('1234.56')
   })
 })

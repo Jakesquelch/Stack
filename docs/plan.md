@@ -365,24 +365,24 @@ Stack/                         # repo root: the app lives next to docs/
 - [x] `money.ts` helpers (pence ↔ "£12.50") + tests. Parsing typed input is the risky direction: `"0.29" * 100` is `28.999…`, so use `Math.round`. Reject anything with more than two decimal places
 
 ### Phase 2 — Game night (the MVP)
-- [ ] Join screen: add-to-home-screen instructions, passphrase, pick/add your name
-- [ ] PWA manifest + icons (moved up from Phase 4, since the first real night is when everyone installs it)
-- [ ] Start game: default buy-in + select players (or type a new name)
-- [ ] Live game: player rows, **+ Rebuy** (default amount) and a small **£…** button for other amounts
-- [ ] **+ Add player** for late arrivals
-- [ ] **Cash out** mid-game (enter their stack; tap to fix it or put them back in)
-- [ ] Activity log: time + who recorded each buy-in; tap to remove (with confirmation)
-- [ ] Cancel game: confirmation that says what will be lost, red button, marks the game cancelled
-- [ ] Live game refreshes every few seconds and when the app is reopened (TanStack Query). Realtime replaces the polling in Phase 4
-- [ ] End game: enter the remaining final stacks, mismatch check
-- [ ] Settle screen: nets + transfers + "Copy to clipboard"
-- [ ] `finish_game`: save settlements and mark the game finished in one call
+- [x] Join screen: add-to-home-screen instructions, passphrase, pick/add your name
+- [x] PWA manifest + icons (moved up from Phase 4, since the first real night is when everyone installs it)
+- [x] Start game: default buy-in + select players (or type a new name)
+- [x] Live game: player rows, **+ Rebuy** (default amount) and a small **£…** button for other amounts
+- [x] **+ Add player** for late arrivals
+- [x] **Cash out** mid-game (enter their stack; tap to fix it or put them back in)
+- [x] Activity log: time + who recorded each buy-in; tap to remove (with confirmation)
+- [x] Cancel game: confirmation that says what will be lost, red button, marks the game cancelled
+- [x] Live game refreshes every few seconds and when the app is reopened (TanStack Query). Realtime replaces the polling in Phase 4
+- [x] End game: enter the remaining final stacks, mismatch check
+- [x] Settle screen: nets + transfers + "Copy to clipboard"
+- [x] `finish_game`: save settlements and mark the game finished in one call
 
 **Milestone: use it at a real poker night.**
 
 ### Phase 3 — History & leaderboard
-- [ ] History list + game detail table
-- [ ] Leaderboard from the view: compact rows, tap for the rest, your own row highlighted
+- [x] History list + game detail table
+- [x] Leaderboard from the view: compact rows, tap for the rest, your own row highlighted
 
 ### Phase 4 — Polish
 - [ ] Real-time updates (Supabase Realtime) so everyone's phone shows live rebuys

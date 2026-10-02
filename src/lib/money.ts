@@ -37,3 +37,8 @@ export function parsePounds(input: string): number | null {
   const pence = Number(whole || '0') * 100 + Number(fraction.padEnd(2, '0'))
   return pence <= MAX_PENCE ? pence : null
 }
+
+/** Pence as the text to pre-fill a money input with: 4500 → "45", 1250 → "12.50" */
+export function penceToInput(pence: number): string {
+  return formatPence(pence).replace('£', '').replace(/,/g, '')
+}
