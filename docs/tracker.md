@@ -1,8 +1,8 @@
-26th September:
+### 26th September:
 
 - Set up github via SSH, got plan in, .gitignore and CLAUDE.md file
 
-2nd October:
+### 2nd October:
 
 - Going to start building it now (Using Opus 5.5 at medium effort)
 - Installed Node 22 via nvm (wasn't on the machine)
@@ -28,5 +28,20 @@ Have now set up the prod supabase project and linked that to the project. Set up
 - Updated the README (live link, status) and ticked off Phase 0 in the plan
 - Next: invite the crew, then Phase 4 (live updates, splash screen, reopen a settled game)
 
+### 5th October:
+
+Yesterday I showed my friends how to install the app on their phone and how to login etc, we then used it for the poker game. It worked great! Our addition of stacks at the end was correct, it calculated who owed who money and I could paste that into the gc. It successfully showed the game history and also updated the leaderboard.
+
+### Reflection:
+
+I think this project has gone well because I spent a while prepping. I spent a good few hours building that initial plan.md specification. I also spent a few days just thinking over what I want. If you have a clear-ish vision of what you want to produce, it will make the implementation using AI much easier, as you can specify your needs and the purpose of your project. For example I already knew that I wanted it to be a web app that could be added to the home screen, I know I wanted 3 pages, a basic UI, and my main problem solved:
+- Calculating who pays who at the end of the night
+From there I then came up with the additional features:
+- Game history
+- Player stat leaderboard
+I used opus initially but did a final prompt with fable questioning things that I have maybe missed/not thought about or problems that I could hit (I think this was very important as made the spec much more informative and gave Opus a clear direction when it came to implementation). 
+
 Potential issues/improvements:
 - What if we don't all want to buy in with the same amount of money at the start?
+- Don't need £10 or £15 buy in options
+- What happens when someone presses settle? It doesn't update other peoples phone screens to that page. Can only 1 person settle?
