@@ -41,7 +41,16 @@ From there I then came up with the additional features:
 - Player stat leaderboard
 I used opus initially but did a final prompt with fable questioning things that I have maybe missed/not thought about or problems that I could hit (I think this was very important as made the spec much more informative and gave Opus a clear direction when it came to implementation). 
 
+### 12th Oct: 
+
+Have had the app up for about a week now and have ran 2 games on it. Want to do some cleanups/small tweaks to it now.
+1. Change buy in options to only have £20 and other (didn't need the £10 and £15 buttons)
+2. Added a new activity list feature where you can tweak the amount someone buys/rebuys in for (this is handy if someone doesn't want to buy/rebuy in for the normal £20 amount)
+
 Potential issues/improvements:
-- What if we don't all want to buy in with the same amount of money at the start?
-- Don't need £10 or £15 buy in options
 - What happens when someone presses settle? It doesn't update other peoples phone screens to that page. Can only 1 person settle?
+- Add an extra page after cancel game checking if you are sure you want to cancel game
+- Have it so in the corner it shows you what player you are signed in as (maybe have some sort of profile section too?)
+- Add a feature to write a note in the activity chat?
+- Have an override button for when chips don't settle and it is such a small discrepency that it's kind of pointless to mess around with.
+- Just add some new features that make it cooler, the main focus is the game screen as that is what people see for 90% of the time. Also the leaderboards could be changed too I guess? Having some more personal features ie pictures of people or something, or adding inside jokes/a bit of personality to the app could make it more fun. It's just for me and my mates anyway so it doesn't matter too much.

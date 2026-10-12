@@ -6,7 +6,8 @@ import { createPlayer } from '../lib/players'
 import { must, supabase } from '../lib/supabase'
 import { MoneyInput } from './MoneyInput'
 
-const BUY_IN_OPTIONS = [1000, 1500, 2000]
+// one player on a different amount? Start the game, then tap their buy-in in Activity to change it
+const BUY_IN_OPTIONS = [2000]
 
 export function StartGame({ myPlayerId }: { myPlayerId: string }) {
   const queryClient = useQueryClient()
@@ -56,7 +57,7 @@ export function StartGame({ myPlayerId }: { myPlayerId: string }) {
 
       <section className="flex flex-col gap-2">
         <h2 className="font-semibold text-slate-300">Buy-in</h2>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2">
           {BUY_IN_OPTIONS.map((pence) => (
             <button
               key={pence}
