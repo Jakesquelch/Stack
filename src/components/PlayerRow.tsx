@@ -5,8 +5,6 @@ import { formatNet, formatPence, parsePounds, penceToInput } from '../lib/money'
 import { MoneyInput } from './MoneyInput'
 import { Sheet } from './Sheet'
 
-const QUICK_AMOUNTS = [1000, 1500, 2000]
-
 type Props = {
   gameId: string
   playerId: string
@@ -19,12 +17,12 @@ type Props = {
 
 export function PlayerRow({ gameId, playerId, name, count, totalIn, finalStack, defaultBuyIn }: Props) {
   const queryClient = useQueryClient()
-  const [sheet, setSheet] = useState<'amount' | 'player' | null>(null)
+  const [cashingOut, setCashingOut] = useState(false)
   const saving = useRef(false)
   const cashedOut = finalStack !== null
 
   const rebuy = useMutation({
-    mutationFn: (amount: number) => addBuyIn(gameId, playerId, amount),
+    mutationFn: () => addBuyIn(gameId, playerId, defaultBuyIn),
     onSettled: () => {
       saving.current = false
       return queryClient.invalidateQueries({ queryKey: ['liveGame'] })
@@ -32,15 +30,16 @@ export function PlayerRow({ gameId, playerId, name, count, totalIn, finalStack, 
   })
 
   // a ref as well as isPending: two quick taps can both land before React re-renders
-  const tapRebuy = (amount: number) => {
+  // a different amount? Tap the rebuy in Activity afterwards to change it
+  const tapRebuy = () => {
     if (saving.current) return
     saving.current = true
-    rebuy.mutate(amount)
+    rebuy.mutate()
   }
 
   return (
     <li className={`card flex items-center gap-2 p-2 pl-4 ${cashedOut ? 'opacity-50' : ''}`}>
-      <button className="flex min-h-12 min-w-0 flex-1 flex-col items-start justify-center text-left" onClick={() => setSheet('player')}>
+      <button className="flex min-h-12 min-w-0 flex-1 flex-col items-start justify-center text-left" onClick={() => setCashingOut(true)}>
         <span className="w-full truncate font-semibold">{name}</span>
         <span className="text-sm text-slate-400 tabular-nums">
           {count} × · {formatPence(totalIn)}
@@ -56,66 +55,22 @@ export function PlayerRow({ gameId, playerId, name, count, totalIn, finalStack, 
       </button>
 
       {!cashedOut && (
-        <>
-          <button className="btn-secondary px-3" aria-label={`Other amount for ${name}`} onClick={() => setSheet('amount')}>
-            £…
-          </button>
-          <button className="btn-primary w-28" disabled={rebuy.isPending} onClick={() => tapRebuy(defaultBuyIn)}>
-            {rebuy.isPending ? 'Saving…' : '+ Rebuy'}
-          </button>
-        </>
+        <button className="btn-primary w-28" disabled={rebuy.isPending} onClick={tapRebuy}>
+          {rebuy.isPending ? 'Saving…' : '+ Rebuy'}
+        </button>
       )}
 
-      {sheet === 'amount' && (
-        <AmountSheet
-          name={name}
-          onPick={(amount) => {
-            tapRebuy(amount)
-            setSheet(null)
-          }}
-          onClose={() => setSheet(null)}
-        />
-      )}
-      {sheet === 'player' && (
+      {cashingOut && (
         <CashOutSheet
           gameId={gameId}
           playerId={playerId}
           name={name}
           totalIn={totalIn}
           finalStack={finalStack}
-          onClose={() => setSheet(null)}
+          onClose={() => setCashingOut(false)}
         />
       )}
     </li>
-  )
-}
-
-function AmountSheet({ name, onPick, onClose }: { name: string; onPick: (pence: number) => void; onClose: () => void }) {
-  const [custom, setCustom] = useState('')
-  const customPence = parsePounds(custom)
-
-  return (
-    <Sheet title={`Buy-in for ${name}`} onClose={onClose}>
-      <div className="mb-3 grid grid-cols-3 gap-2">
-        {QUICK_AMOUNTS.map((pence) => (
-          <button key={pence} className="btn-secondary" onClick={() => onPick(pence)}>
-            {formatPence(pence)}
-          </button>
-        ))}
-      </div>
-      <form
-        className="flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (customPence) onPick(customPence)
-        }}
-      >
-        <MoneyInput className="flex-1" value={custom} onChange={setCustom} placeholder="Other amount" />
-        <button className="btn-primary" disabled={!customPence}>
-          Add
-        </button>
-      </form>
-    </Sheet>
   )
 }
 

@@ -43,11 +43,13 @@ I used opus initially but did a final prompt with fable questioning things that 
 
 ### 12th Oct: 
 
-Have had the app up for about a week now and have ran 2 games on it. Want to do some cleanups/small tweaks to it now.
+Have had the app up for about a week now and have ran 2 home games on it. Want to do some cleanups/small tweaks to it now.
 1. Change buy in options to only have £20 and other (didn't need the £10 and £15 buttons)
 2. Added a new activity list feature where you can tweak the amount someone buys/rebuys in for (this is handy if someone doesn't want to buy/rebuy in for the normal £20 amount)
+3. Removed the £... button next to rebuy, as this gave us an option to rebuy for a different amount, and 2. allowed us to edit the amount of buys/rebuys which makes this button irrelevant. Now if we want to rebuy for a different amount we can just press the green rebuy button and then press on it in the activity log and change the amount.
 
-Potential issues/improvements:
+
+#### Potential issues/improvements:
 - What happens when someone presses settle? It doesn't update other peoples phone screens to that page. Can only 1 person settle?
 - Add an extra page after cancel game checking if you are sure you want to cancel game
 - Have it so in the corner it shows you what player you are signed in as (maybe have some sort of profile section too?)
