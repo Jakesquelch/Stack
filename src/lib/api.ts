@@ -158,21 +158,16 @@ export function useAwards() {
   return useQuery({
     queryKey: ['awards'],
     queryFn: async () => {
-      const games = must(
-        await supabase
+      // both at once so the leaderboard doesn't wait on a second round trip
+      const [games, buyIns] = await Promise.all([
+        supabase
           .from('games')
           .select('id, finished_at, game_players(player_id, final_stack_pence)')
-          .eq('status', 'finished'),
-      )
-      const buyIns = games.length
-        ? must(
-            await supabase
-              .from('buy_ins')
-              .select('game_id, player_id, amount_pence')
-              .in('game_id', games.map((g) => g.id)),
-          )
-        : []
-      // finished games always have finished_at
+          .eq('status', 'finished')
+          .then(must),
+        supabase.from('buy_ins').select('game_id, player_id, amount_pence').then(must),
+      ])
+      // buyIns also has the live game's, which awards() ignores. Finished games always have finished_at
       return awards(games.map((g) => ({ ...g, finished_at: g.finished_at! })), buyIns)
     },
   })

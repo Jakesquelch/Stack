@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
-import { useAwards, useLeaderboard, usePlayerNames } from '../lib/api'
+import { useAwards, useLeaderboard } from '../lib/api'
+import type { Awards as AwardsData } from '../lib/awards'
 import { formatNet, formatPence } from '../lib/money'
 
 // gold, silver, bronze badges for the top 3
@@ -7,20 +8,26 @@ const MEDALS = ['bg-amber-400', 'bg-slate-300', 'bg-[#c2773a]']
 
 /** All-time profit/loss, with a few awards on top. Tap a row for buy-ins, rebuys and total bought in. */
 export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
+  // fetched side by side, and the page waits for both so it appears all at once
   const leaderboard = useLeaderboard()
+  const awards = useAwards()
   const [open, setOpen] = useState<string | null>(null)
+  // awards are extra: if they fail, still show the leaderboard
+  const loading = leaderboard.isPending || awards.isPending
 
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Leaderboard</h1>
 
-      {leaderboard.isPending && <p className="text-slate-400">Loading…</p>}
+      {loading && <p className="text-slate-400">Loading…</p>}
       {leaderboard.isError && <p className="text-rose-400">Couldn't load the leaderboard.</p>}
-      {leaderboard.data?.length === 0 && <p className="text-slate-400">No finished games yet.</p>}
+      {!loading && leaderboard.data?.length === 0 && <p className="text-slate-400">No finished games yet.</p>}
 
-      {!!leaderboard.data?.length && (
+      {!loading && !!leaderboard.data?.length && (
         <>
-          <Awards />
+          {awards.data && (
+            <Awards awards={awards.data} nameOf={(id) => leaderboard.data.find((r) => r.id === id)?.name ?? '…'} />
+          )}
           <ul className="card divide-y divide-slate-800 overflow-hidden">
             {leaderboard.data.map((r, i) => {
               const mine = r.id === myPlayerId
@@ -83,10 +90,8 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
 }
 
 /** Biggest night, most rebuys and worst night. An award only shows once someone has earned it. */
-function Awards() {
-  const awards = useAwards()
-  const { biggestNight, mostRebuys, worstNight } = awards.data ?? {}
-  const nameOf = usePlayerNames([biggestNight?.playerId ?? null, mostRebuys?.playerId ?? null, worstNight?.playerId ?? null])
+function Awards({ awards, nameOf }: { awards: AwardsData; nameOf: (id: string) => string }) {
+  const { biggestNight, mostRebuys, worstNight } = awards
 
   if (!biggestNight && !mostRebuys && !worstNight) return null
 

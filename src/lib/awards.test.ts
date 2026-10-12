@@ -57,6 +57,19 @@ describe('awards', () => {
     expect(awards([a.g], a.buyIns)).toEqual({ biggestNight: null, worstNight: null, mostRebuys: null })
   })
 
+  it("ignores buy-ins from games that aren't finished", () => {
+    const a = game('g1', '2026-10-04T23:00:00Z', {
+      sam: { stack: 4000, buyIns: [2000] },
+      tom: { stack: 0, buyIns: [2000, 2000] },
+    })
+    const live = [2000, 2000, 2000, 2000].map((amount_pence) => ({ game_id: 'live', player_id: 'sam', amount_pence }))
+    expect(awards([a.g], [...a.buyIns, ...live])).toEqual({
+      biggestNight: { playerId: 'sam', net: 2000 },
+      worstNight: { playerId: 'tom', net: -4000 },
+      mostRebuys: { playerId: 'tom', rebuys: 1 },
+    })
+  })
+
   it('gives no awards before any games are finished', () => {
     expect(awards([], [])).toEqual({ biggestNight: null, worstNight: null, mostRebuys: null })
   })
