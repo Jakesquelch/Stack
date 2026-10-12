@@ -1,6 +1,7 @@
 // Data the app reads, as TanStack Query hooks. Writes live next to the screens that make them.
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { awards } from './awards'
 import { ensureSession, must, supabase } from './supabase'
 
 export type Player = { id: string; name: string }
@@ -148,6 +149,31 @@ export function useHistory() {
         players: g.game_players.length,
         pot: g.game_players.reduce((sum, p) => sum + (p.final_stack_pence ?? 0), 0),
       }))
+    },
+  })
+}
+
+/** Biggest night, worst night and most rebuys across every finished game */
+export function useAwards() {
+  return useQuery({
+    queryKey: ['awards'],
+    queryFn: async () => {
+      const games = must(
+        await supabase
+          .from('games')
+          .select('id, finished_at, game_players(player_id, final_stack_pence)')
+          .eq('status', 'finished'),
+      )
+      const buyIns = games.length
+        ? must(
+            await supabase
+              .from('buy_ins')
+              .select('game_id, player_id, amount_pence')
+              .in('game_id', games.map((g) => g.id)),
+          )
+        : []
+      // finished games always have finished_at
+      return awards(games.map((g) => ({ ...g, finished_at: g.finished_at! })), buyIns)
     },
   })
 }

@@ -1,8 +1,11 @@
-import { useState } from 'react'
-import { useLeaderboard } from '../lib/api'
+import { useState, type ReactNode } from 'react'
+import { useAwards, useLeaderboard, usePlayerNames } from '../lib/api'
 import { formatNet, formatPence } from '../lib/money'
 
-/** All-time profit/loss. Tap a row for buy-ins, rebuys and total bought in. */
+// gold, silver, bronze badges for the top 3
+const MEDALS = ['bg-amber-400', 'bg-slate-300', 'bg-[#c2773a]']
+
+/** All-time profit/loss, with a few awards on top. Tap a row for buy-ins, rebuys and total bought in. */
 export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
   const leaderboard = useLeaderboard()
   const [open, setOpen] = useState<string | null>(null)
@@ -16,14 +19,9 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
       {leaderboard.data?.length === 0 && <p className="text-slate-400">No finished games yet.</p>}
 
       {!!leaderboard.data?.length && (
-        <div className="card overflow-hidden">
-          <div className="flex gap-3 px-4 py-2 text-xs text-slate-400">
-            <span className="w-6">#</span>
-            <span className="flex-1">Player</span>
-            <span className="w-20 text-right">Net</span>
-            <span className="w-12 text-right">Games</span>
-          </div>
-          <ul className="divide-y divide-slate-800">
+        <>
+          <Awards />
+          <ul className="card divide-y divide-slate-800 overflow-hidden">
             {leaderboard.data.map((r, i) => {
               const mine = r.id === myPlayerId
               const expanded = open === r.id
@@ -34,30 +32,42 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
                     aria-expanded={expanded}
                     onClick={() => setOpen(expanded ? null : r.id)}
                   >
-                    <span className="w-6 text-slate-500">{i + 1}</span>
-                    <span className={`min-w-0 flex-1 truncate font-medium ${mine ? 'text-emerald-300' : ''}`}>
+                    {i < 3 ? (
+                      <span
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-slate-900 ${MEDALS[i]}`}
+                      >
+                        {i + 1}
+                      </span>
+                    ) : (
+                      <span className="w-7 shrink-0 text-center text-slate-400">{i + 1}</span>
+                    )}
+                    <span className={`min-w-0 flex-1 truncate font-semibold ${mine ? 'text-emerald-300' : ''}`}>
                       {r.name}
-                      {mine && <span className="text-xs text-emerald-400/70"> (you)</span>}
+                      {mine && <span className="text-xs font-medium"> (you)</span>}
                     </span>
-                    <span
-                      className={`w-20 text-right font-semibold ${r.net > 0 ? 'text-emerald-400' : r.net < 0 ? 'text-rose-400' : ''}`}
-                    >
-                      {formatNet(r.net)}
+                    <span className="flex flex-col items-end">
+                      <span
+                        className={`font-bold ${r.net > 0 ? 'text-emerald-400' : r.net < 0 ? 'text-rose-400' : ''}`}
+                      >
+                        {formatNet(r.net)}
+                      </span>
+                      <span className="text-xs text-slate-400">
+                        {r.games} game{r.games === 1 ? '' : 's'}
+                      </span>
                     </span>
-                    <span className="w-12 text-right text-slate-400">{r.games}</span>
                   </button>
                   {expanded && (
-                    <dl className="grid grid-cols-3 gap-2 px-4 pb-3 pl-13 text-sm tabular-nums">
+                    <dl className="grid grid-cols-3 gap-2 px-4 pb-3 pl-14 text-sm tabular-nums">
                       <div>
-                        <dt className="text-xs text-slate-500">Buy-ins</dt>
+                        <dt className="text-xs text-slate-400">Buy-ins</dt>
                         <dd>{r.buyIns}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs text-slate-500">Rebuys</dt>
+                        <dt className="text-xs text-slate-400">Rebuys</dt>
                         <dd>{r.rebuys}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs text-slate-500">Total in</dt>
+                        <dt className="text-xs text-slate-400">Total in</dt>
                         <dd>{formatPence(r.totalIn)}</dd>
                       </div>
                     </dl>
@@ -66,8 +76,79 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
               )
             })}
           </ul>
-        </div>
+        </>
       )}
+    </div>
+  )
+}
+
+/** Biggest night, most rebuys and worst night. An award only shows once someone has earned it. */
+function Awards() {
+  const awards = useAwards()
+  const { biggestNight, mostRebuys, worstNight } = awards.data ?? {}
+  const nameOf = usePlayerNames([biggestNight?.playerId ?? null, mostRebuys?.playerId ?? null, worstNight?.playerId ?? null])
+
+  if (!biggestNight && !mostRebuys && !worstNight) return null
+
+  return (
+    <section aria-label="Awards" className="grid grid-cols-3 gap-2 tabular-nums">
+      {biggestNight && (
+        <Award
+          label="Biggest night"
+          name={nameOf(biggestNight.playerId)}
+          value={<span className="text-emerald-400">{formatNet(biggestNight.net)}</span>}
+          icon={
+            <svg {...ICON} className="h-[18px] w-[18px] text-emerald-400">
+              <path d="M3 17l6-6 4 4 8-8M15 7h6v6" />
+            </svg>
+          }
+        />
+      )}
+      {mostRebuys && (
+        <Award
+          label="Most rebuys"
+          name={nameOf(mostRebuys.playerId)}
+          value={<span className="text-slate-300">{mostRebuys.rebuys} rebuy{mostRebuys.rebuys === 1 ? '' : 's'}</span>}
+          icon={
+            <svg {...ICON} className="h-[18px] w-[18px] text-amber-400">
+              <path d="M21 12a9 9 0 1 1-3-6.7M21 3v6h-6" />
+            </svg>
+          }
+        />
+      )}
+      {worstNight && (
+        <Award
+          label="Worst night"
+          name={nameOf(worstNight.playerId)}
+          value={<span className="text-rose-400">{formatNet(worstNight.net)}</span>}
+          icon={
+            <svg {...ICON} className="h-[18px] w-[18px] text-rose-400">
+              <path d="M3 7l6 6 4-4 8 8M15 17h6v-6" />
+            </svg>
+          }
+        />
+      )}
+    </section>
+  )
+}
+
+const ICON = {
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 2,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  'aria-hidden': true,
+} as const
+
+function Award({ label, name, value, icon }: { label: string; name: string; value: ReactNode; icon: ReactNode }) {
+  return (
+    <div className="card flex min-w-0 flex-col gap-0.5 px-3 py-2.5">
+      {icon}
+      <div className="mt-0.5 text-xs text-slate-400">{label}</div>
+      <div className="truncate font-semibold">{name}</div>
+      <div className="text-sm font-semibold">{value}</div>
     </div>
   )
 }
