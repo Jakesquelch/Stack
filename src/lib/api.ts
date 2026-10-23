@@ -24,16 +24,21 @@ export type LiveGame = {
 // how often a live game refreshes; Realtime replaces this in Phase 4
 const LIVE_POLL_MS = 4000
 
-/** Who this phone is: whether it has entered the passphrase, and whose name it picked */
+/** Who this phone is: whether it has entered the passphrase, whose name it picked, and if it's the admin */
 export function useMe() {
   return useQuery({
     queryKey: ['me'],
     queryFn: async () => {
       const session = await ensureSession()
       const row = must(
-        await supabase.from('members').select('player_id').eq('user_id', session.user.id).maybeSingle(),
+        await supabase.from('members').select('player_id, is_admin').eq('user_id', session.user.id).maybeSingle(),
       )
-      return { userId: session.user.id, isMember: row !== null, playerId: row?.player_id ?? null }
+      return {
+        userId: session.user.id,
+        isMember: row !== null,
+        playerId: row?.player_id ?? null,
+        isAdmin: row?.is_admin ?? false,
+      }
     },
     staleTime: Infinity,
   })
@@ -44,6 +49,15 @@ export function usePlayers() {
     queryKey: ['players'],
     queryFn: async (): Promise<Player[]> =>
       must(await supabase.from('players').select('id, name').order('name')),
+  })
+}
+
+/** Every player and whether they're a regular, for the admin's Regulars page */
+export function useRegulars() {
+  return useQuery({
+    // under 'players' so adding a player refreshes this too
+    queryKey: ['players', 'regulars'],
+    queryFn: async () => must(await supabase.from('players').select('id, name, is_regular').order('name')),
   })
 }
 
@@ -198,6 +212,7 @@ export function useLeaderboard() {
         rebuys: Number(r.rebuys),
         totalIn: Number(r.total_in_pence),
         net: Number(r.net_pence),
+        isRegular: r.is_regular!,
       }))
     },
   })

@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
+import { Link } from 'react-router'
 import { useLeaderboard, useResults } from '../lib/api'
 import { awards, type Awards as AwardsData, type GameBuyIn } from '../lib/awards'
 import { formatNet, formatPence } from '../lib/money'
@@ -14,7 +15,7 @@ const TABS = [
 type Tab = (typeof TABS)[number]['id']
 
 /** All-time or one month's profit/loss, with a few awards on top. Tap a row for buy-ins, rebuys and total bought in. */
-export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
+export function Leaderboard({ myPlayerId, isAdmin }: { myPlayerId: string; isAdmin: boolean }) {
   // fetched side by side, and the page waits for both so it appears all at once
   const leaderboard = useLeaderboard()
   const results = useResults()
@@ -26,7 +27,21 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Leaderboard</h1>
+      <header className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Leaderboard</h1>
+        {isAdmin && (
+          <Link
+            to="/leaderboard/regulars"
+            aria-label="Choose regulars"
+            className="-mr-2 flex h-11 w-11 items-center justify-center text-slate-400"
+          >
+            <svg {...ICON} className="h-5 w-5">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+            </svg>
+          </Link>
+        )}
+      </header>
 
       {loading && <p className="text-slate-400">Loading…</p>}
       {leaderboard.isError && <p className="text-rose-400">Couldn't load the leaderboard.</p>}
@@ -53,7 +68,7 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
               {allTimeAwards && (
                 <Awards awards={allTimeAwards} nameOf={(id) => leaderboard.data.find((r) => r.id === id)?.name ?? '…'} />
               )}
-              <Standings rows={leaderboard.data} myPlayerId={myPlayerId} />
+              <AllTime rows={leaderboard.data} myPlayerId={myPlayerId} />
             </>
           )}
 
@@ -66,6 +81,26 @@ export function Leaderboard({ myPlayerId }: { myPlayerId: string }) {
         </>
       )}
     </div>
+  )
+}
+
+/** Regulars only, ranked among themselves. "Show all players" ranks everyone together. */
+function AllTime({ rows, myPlayerId }: { rows: (Standing & { isRegular: boolean })[]; myPlayerId: string }) {
+  const [showAll, setShowAll] = useState(false)
+  const regulars = rows.filter((r) => r.isRegular)
+  const occasional = rows.length - regulars.length
+  // nobody marked as a regular yet: just show everyone
+  const everyone = showAll || regulars.length === 0
+
+  return (
+    <>
+      <Standings rows={everyone ? rows : regulars} myPlayerId={myPlayerId} />
+      {occasional > 0 && regulars.length > 0 && (
+        <button className="min-h-11 text-sm font-semibold text-slate-400" onClick={() => setShowAll(!showAll)}>
+          {showAll ? 'Show regulars only' : `Show all players (${occasional} more)`}
+        </button>
+      )}
+    </>
   )
 }
 

@@ -154,16 +154,19 @@ export type Database = {
       }
       members: {
         Row: {
+          is_admin: boolean
           joined_at: string
           player_id: string | null
           user_id: string
         }
         Insert: {
+          is_admin?: boolean
           joined_at?: string
           player_id?: string | null
           user_id: string
         }
         Update: {
+          is_admin?: boolean
           joined_at?: string
           player_id?: string | null
           user_id?: string
@@ -189,16 +192,19 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_regular: boolean
           name: string
         }
         Insert: {
           created_at?: string
           id?: string
+          is_regular?: boolean
           name: string
         }
         Update: {
           created_at?: string
           id?: string
+          is_regular?: boolean
           name?: string
         }
         Relationships: []
@@ -285,6 +291,7 @@ export type Database = {
           buy_ins: number | null
           games: number | null
           id: string | null
+          is_regular: boolean | null
           name: string | null
           net_pence: number | null
           rebuys: number | null
@@ -304,6 +311,10 @@ export type Database = {
       }
       join_crew: { Args: { passphrase: string }; Returns: boolean }
       ping: { Args: never; Returns: boolean }
+      set_regular: {
+        Args: { player_id: string; regular: boolean }
+        Returns: undefined
+      }
       start_game: {
         Args: { default_buy_in_pence: number; player_ids: string[] }
         Returns: string

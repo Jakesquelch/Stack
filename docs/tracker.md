@@ -56,6 +56,8 @@ Edited the wording "pot" that was mentioned to reference the total amount that w
 
 Added a "monthly" section to the leaderboard page. We previously only had an all-time leaderboard view, I think a monthly leaderboard is a cool thing to have.
 
+Did a change to the leaderboard. Basically we had a few players that were joining the app and had only played a few times. This cluttered the leaderboard and made it a bit messy, I want it so that I can filter who is on that leaderboard. So I made a DB change and made myself an admin, and I now have a gear icon on the leaderboard tab, I can toggle players using this so that they are "regulars" or "occasional" players. The regular players will be the ones that will show up in the all-time leaderboard, at the bottom you can press on "Show all players (3 more)" which will show you the occasional players too if you'd like to see them. The monthly leaderboard will not be affected by this change and will always just show everyone on the app (regulars + occasional), but ye this was a nice little fix to help de-clutter the leaderboard page and show the people that play the most.
+
 #### Potential issues/improvements:
 - Improve look of live game page
 - Improve look of history page

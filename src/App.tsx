@@ -7,6 +7,7 @@ import { GameDetail } from './pages/GameDetail'
 import { History } from './pages/History'
 import { Join } from './pages/Join'
 import { Leaderboard } from './pages/Leaderboard'
+import { Regulars } from './pages/Regulars'
 
 export default function App() {
   const me = useMe()
@@ -25,7 +26,7 @@ export default function App() {
     )
   }
 
-  const { isMember, playerId, userId } = me.data
+  const { isMember, playerId, userId, isAdmin } = me.data
   if (!isMember || !playerId) return <Join isMember={isMember} userId={userId} />
 
   return (
@@ -35,7 +36,8 @@ export default function App() {
           <Route path="/" element={<Game myPlayerId={playerId} />} />
           <Route path="/history" element={<History />} />
           <Route path="/history/:id" element={<GameDetail />} />
-          <Route path="/leaderboard" element={<Leaderboard myPlayerId={playerId} />} />
+          <Route path="/leaderboard" element={<Leaderboard myPlayerId={playerId} isAdmin={isAdmin} />} />
+          {isAdmin && <Route path="/leaderboard/regulars" element={<Regulars />} />}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
