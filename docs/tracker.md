@@ -54,6 +54,8 @@ Have had the app up for about a week now and have ran 2 home games on it. Want t
 
 Edited the wording "pot" that was mentioned to reference the total amount that was on the table. I changed "pot" to be "in play" everywhere in the code, as that makes more sense to me.
 
+Added a "monthly" section to the leaderboard page. We previously only had an all-time leaderboard view, I think a monthly leaderboard is a cool thing to have.
+
 #### Potential issues/improvements:
 - Improve look of live game page
 - Improve look of history page

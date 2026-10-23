@@ -1,7 +1,7 @@
 // Data the app reads, as TanStack Query hooks. Writes live next to the screens that make them.
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { awards } from './awards'
+import type { ResultGame } from './monthly'
 import { ensureSession, must, supabase } from './supabase'
 
 export type Player = { id: string; name: string }
@@ -153,22 +153,32 @@ export function useHistory() {
   })
 }
 
-/** Biggest night, worst night and most rebuys across every finished game */
-export function useAwards() {
+/** Every finished game with who played, plus every buy-in. The awards and the monthly tab are worked out from these. */
+export function useResults() {
   return useQuery({
-    queryKey: ['awards'],
+    queryKey: ['results'],
     queryFn: async () => {
       // both at once so the leaderboard doesn't wait on a second round trip
       const [games, buyIns] = await Promise.all([
         supabase
           .from('games')
-          .select('id, finished_at, game_players(player_id, final_stack_pence)')
+          .select('id, started_at, finished_at, game_players(player_id, final_stack_pence, players(name))')
           .eq('status', 'finished')
           .then(must),
         supabase.from('buy_ins').select('game_id, player_id, amount_pence').then(must),
       ])
-      // buyIns also has the live game's, which awards() ignores. Finished games always have finished_at
-      return awards(games.map((g) => ({ ...g, finished_at: g.finished_at! })), buyIns)
+      // buyIns also has the live game's, which awards() and standings() ignore
+      const results: ResultGame[] = games.map((g) => ({
+        id: g.id,
+        started_at: g.started_at,
+        finished_at: g.finished_at!, // finished games always have one
+        game_players: g.game_players.map((p) => ({
+          player_id: p.player_id,
+          name: p.players?.name ?? '…',
+          final_stack_pence: p.final_stack_pence,
+        })),
+      }))
+      return { games: results, buyIns }
     },
   })
 }
