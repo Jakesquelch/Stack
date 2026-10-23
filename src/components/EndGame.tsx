@@ -7,12 +7,12 @@ import { settle } from '../lib/settle'
 import { must, supabase } from '../lib/supabase'
 import { MoneyInput } from './MoneyInput'
 
-/** Enter everyone's final stack, check they add up to the pot, then settle */
+/** Enter everyone's final stack, check they add up to the amount in play, then settle */
 export function EndGame({ game, nameOf, onBack }: { game: LiveGame; nameOf: (id: string) => string; onBack: () => void }) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const totals = playerTotals(game.players, game.buyIns)
-  const pot = totals.reduce((sum, t) => sum + t.totalIn, 0)
+  const inPlay = totals.reduce((sum, t) => sum + t.totalIn, 0)
 
   // cashed-out players are filled in already; still-playing players start empty
   const [stacks, setStacks] = useState<Record<string, string>>(() =>
@@ -21,7 +21,7 @@ export function EndGame({ game, nameOf, onBack }: { game: LiveGame; nameOf: (id:
   const parsed = totals.map((t) => ({ ...t, stack: parsePounds(stacks[t.playerId] ?? '') }))
   const allEntered = parsed.every((p) => p.stack !== null)
   const stackTotal = parsed.reduce((sum, p) => sum + (p.stack ?? 0), 0)
-  const difference = stackTotal - pot
+  const difference = stackTotal - inPlay
   const balanced = allEntered && difference === 0
 
   const finish = useMutation({
@@ -76,8 +76,8 @@ export function EndGame({ game, nameOf, onBack }: { game: LiveGame; nameOf: (id:
 
       <div className="card p-4 tabular-nums">
         <div className="flex justify-between text-slate-400">
-          <span>Pot</span>
-          <span>{formatPence(pot)}</span>
+          <span>In play</span>
+          <span>{formatPence(inPlay)}</span>
         </div>
         <div className="flex justify-between text-slate-400">
           <span>Stacks</span>
@@ -89,7 +89,7 @@ export function EndGame({ game, nameOf, onBack }: { game: LiveGame; nameOf: (id:
           {!allEntered
             ? 'Enter every stack'
             : balanced
-              ? 'Stacks match the pot'
+              ? 'Stacks match the amount in play'
               : `Stacks are ${formatPence(Math.abs(difference))} ${difference < 0 ? 'short' : 'over'}`}
         </p>
         {allEntered && !balanced && (

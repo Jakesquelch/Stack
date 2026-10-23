@@ -130,7 +130,7 @@ export function playerTotals(players: GamePlayer[], buyIns: Pick<BuyIn, 'player_
   })
 }
 
-/** Finished games, newest first. For a finished game the stacks add up to the pot. */
+/** Finished games, newest first. For a finished game the stacks add up to the amount in play. */
 export function useHistory() {
   return useQuery({
     queryKey: ['history'],
@@ -147,7 +147,7 @@ export function useHistory() {
         finishedAt: g.finished_at!,
         defaultBuyIn: g.default_buy_in_pence,
         players: g.game_players.length,
-        pot: g.game_players.reduce((sum, p) => sum + (p.final_stack_pence ?? 0), 0),
+        inPlay: g.game_players.reduce((sum, p) => sum + (p.final_stack_pence ?? 0), 0),
       }))
     },
   })

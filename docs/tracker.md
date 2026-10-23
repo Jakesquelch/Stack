@@ -32,7 +32,7 @@ Have now set up the prod supabase project and linked that to the project. Set up
 
 Yesterday I showed my friends how to install the app on their phone and how to login etc, we then used it for the poker game. It worked great! Our addition of stacks at the end was correct, it calculated who owed who money and I could paste that into the gc. It successfully showed the game history and also updated the leaderboard.
 
-### Reflection:
+#### Reflection:
 
 I think this project has gone well because I spent a while prepping. I spent a good few hours building that initial plan.md specification. I also spent a few days just thinking over what I want. If you have a clear-ish vision of what you want to produce, it will make the implementation using AI much easier, as you can specify your needs and the purpose of your project. For example I already knew that I wanted it to be a web app that could be added to the home screen, I know I wanted 3 pages, a basic UI, and my main problem solved:
 - Calculating who pays who at the end of the night
@@ -50,7 +50,14 @@ Have had the app up for about a week now and have ran 2 home games on it. Want t
 4. Updated the leaderboard page to have badges for 1st, 2nd and 3rd. Also added some awards for biggest night, most rebuys etc at the top
 
 
+### 23rd Oct:
+
+Edited the wording "pot" that was mentioned to reference the total amount that was on the table. I changed "pot" to be "in play" everywhere in the code, as that makes more sense to me.
+
 #### Potential issues/improvements:
+- Improve look of live game page
+- Improve look of history page
+- Improve look of starting game page
 - What happens when someone presses settle? It doesn't update other peoples phone screens to that page. Can only 1 person settle?
 - Add an extra page after cancel game checking if you are sure you want to cancel game
 - Have it so in the corner it shows you what player you are signed in as (maybe have some sort of profile section too?)

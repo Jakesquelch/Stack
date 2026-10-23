@@ -16,7 +16,7 @@ export function LiveGame({ game, nameOf }: { game: Game; nameOf: (id: string | n
   const [sheet, setSheet] = useState<'add' | 'cancel' | null>(null)
 
   const totals = playerTotals(game.players, game.buyIns)
-  const pot = totals.reduce((sum, t) => sum + t.totalIn, 0)
+  const inPlay = totals.reduce((sum, t) => sum + t.totalIn, 0)
   // still playing first, then cashed out; alphabetical within each
   const rows = [...totals].sort(
     (a, b) =>
@@ -39,8 +39,8 @@ export function LiveGame({ game, nameOf }: { game: Game; nameOf: (id: string | n
         <p className="text-sm text-slate-400">
           Live · {formatPence(game.default_buy_in_pence)} buy-in · started {formatTime(game.started_at)}
         </p>
-        <h1 className="text-4xl font-bold tabular-nums">{formatPence(pot)}</h1>
-        <p className="text-sm text-slate-400">in the pot</p>
+        <h1 className="text-4xl font-bold tabular-nums">{formatPence(inPlay)}</h1>
+        <p className="text-sm text-slate-400">in play</p>
       </header>
 
       <ul className="flex flex-col gap-2">

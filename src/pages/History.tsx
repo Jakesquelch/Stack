@@ -26,8 +26,8 @@ export function History() {
                   </div>
                 </div>
                 <div className="text-right tabular-nums">
-                  <div className="font-semibold">{formatPence(g.pot)}</div>
-                  <div className="text-xs text-slate-500">pot</div>
+                  <div className="font-semibold">{formatPence(g.inPlay)}</div>
+                  <div className="text-xs text-slate-500">in play</div>
                 </div>
                 <span className="text-slate-600" aria-hidden="true">
                   ›
